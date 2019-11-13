@@ -117,3 +117,16 @@ while [ "${appName}" != "" ]; do
     index=$((index + 1))
     appName=$(getApplicationName $index)
 done
+
+# Making sure the variable exists
+if [[ -z ${TRAVIS_EVENT_TYPE+x} ]]; then
+  TRAVIS_EVENT_TYPE=""
+fi
+
+if [[ ${TRAVIS_EVENT_TYPE} == "cron" ]]; then
+  logInfo "Daily build initiated by Travis cron job." 1
+  logInfo "Push new commits on GitHub"
+  git push github master
+else
+  logInfo "Normal build. New commits won't be pushed." 1
+fi
