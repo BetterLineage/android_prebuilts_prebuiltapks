@@ -1,0 +1,32 @@
+language: node_js
+node_js:
+  - "10"
+
+dist: trusty
+sudo: false # better for performance
+
+before_install:
+  - echo $TRAVIS_COMMIT
+  - echo $TRAVIS_TAG
+  - echo $TRAVIS_BRANCH
+  - echo $TRAVIS_BUILD_NUMBER
+  - echo $TRAVIS_REPO
+  - AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
+  - echo $AUTHOR_NAME
+  - export TZ=Europe/Brussels
+  - NODE_VERSION="$(node -v)"
+  - echo $NODE_VERSION
+  - git remote add github https://${GH_TOKEN}@github.com/SuperITMan/android_prebuilts_prebuiltapks.git
+
+env:
+  global:
+    - LOGS_DIR=/tmp/stark/logs
+    - LOGS_FILE=/tmp/stark/logs/build-perf.log
+
+branches:
+  only:
+  - master
+
+script:
+  - bash ./scripts/update-packages.sh
+  - bash ./scripts/ci/print-logs.sh
